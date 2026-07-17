@@ -8,6 +8,7 @@ import {
   upsertKas,
   upsertKehadiran,
   insertTransaksi,
+  insertBanyakTransaksi,
   deleteTransaksi,
   type KategoriKas,
   type StatusKehadiran,
@@ -85,15 +86,33 @@ export async function submitKas(formData: FormData) {
   const kategori = String(formData.get("kategori") || "") as KategoriKas;
   const inputBy = String(formData.get("inputBy") || "admin");
   const rows: { santriId: string; lunas: boolean; nominal: number | null }[] = [];
+  const transaksis: any[] = [];
+  
   for (const [key, val] of formData.entries()) {
     if (key.startsWith("lunas_")) {
       const id = key.slice(6);
       const nominalRaw = formData.get(`nominal_${id}`);
       const nominal = nominalRaw ? Number(nominalRaw) || null : null;
-      rows.push({ santriId: id, lunas: val === "on", nominal });
+      const isLunas = val === "on";
+      rows.push({ santriId: id, lunas: isLunas, nominal });
+      
+      if (isLunas && nominal && nominal > 0) {
+        transaksis.push({
+          tanggal,
+          jenis: "Masuk",
+          santri_id: id,
+          sumber_tujuan: `Kas ${kategori}`,
+          nominal,
+          keterangan: "Otomatis dari Kas Bulanan",
+          input_by: inputBy,
+        });
+      }
     }
   }
   await upsertKas(rows, tanggal, kategori, inputBy);
+  if (transaksis.length > 0) {
+    await insertBanyakTransaksi(transaksis);
+  }
   redirect("/admin?tab=kas&ok=1");
 }
 

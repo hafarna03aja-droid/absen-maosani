@@ -159,6 +159,12 @@ export async function upsertKas(
   if (error) throw error;
 }
 
+export async function insertBanyakTransaksi(data: Omit<Transaksi, "id" | "created_at" | "santri_nama">[]) {
+  if (data.length === 0) return;
+  const { error } = await supabase.from("transaksi").insert(data);
+  if (error) throw error;
+}
+
 export async function getLog(tanggal: string, tipeKelas: TipeKelas) {
   if (supabaseUrl.includes("placeholder")) return [];
   const { data, error } = await supabase
