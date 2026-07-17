@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { submitBukuKas, removeTransaksi } from "@/app/actions";
 import type { Santri, Transaksi } from "@/lib/db";
 
 function todayLocal() {
@@ -37,7 +38,7 @@ export default function BukuKasForm({
 
       <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
         <h2 className="mb-4 font-semibold text-slate-800">Input Transaksi Baru</h2>
-        <form className="space-y-4" action="/actions/buku" method="post">
+        <form className="space-y-4" action={submitBukuKas}>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-sm">
               <span className="mb-1 block font-medium text-slate-600">Tanggal</span>
@@ -158,7 +159,6 @@ export default function BukuKasForm({
 
           <button
             type="submit"
-            formAction="/actions/buku"
             className="w-full rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 sm:w-auto"
           >
             Simpan Transaksi
@@ -203,7 +203,7 @@ export default function BukuKasForm({
                   {t.jenis === "Masuk" ? "+" : "-"} {formatRupiah(t.nominal)}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <form action="/actions/buku_delete" method="post" onSubmit={(e) => {
+                  <form action={removeTransaksi} onSubmit={(e) => {
                     if (!confirm("Hapus transaksi ini?")) e.preventDefault();
                   }}>
                     <input type="hidden" name="id" value={t.id} />
