@@ -26,7 +26,7 @@ export default async function PublicPage({
   let rekap = await getRekap(bulan);
   if (q) rekap = rekap.filter((r) => r.nama.toLowerCase().includes(q));
 
-  const lunas = rekap.filter((r) => r.kasReguler === "Lunas" && r.kasMaosani === "Lunas").length;
+  const lunas = rekap.filter((r) => r.kasReguler === "Lunas" && r.kasUmum === "Lunas").length;
 
   return (
     <main className="flex-1">
@@ -76,9 +76,9 @@ export default async function PublicPage({
           <p className="mt-6 text-center text-slate-500">Tidak ada data yang cocok.</p>
         ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {rekap.map((r) => (
+            {rekap.map((r, i) => (
               <div key={r.id} className="rounded-xl bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-slate-800">{r.nama}</h3>
+                <h3 className="font-semibold text-slate-800">{i + 1}. {r.nama}</h3>
                 <div className="mt-3">
                   <div className="flex items-center justify-between text-xs text-slate-500">
                     <span>Kehadiran</span>
@@ -104,15 +104,15 @@ export default async function PublicPage({
                   >
                     Kas Reguler: {r.kasReguler}
                   </span>
-                  <span
+                    <span
                     className={`rounded-full px-2 py-1 font-medium ${
-                      r.kasMaosani === "Lunas"
+                      r.kasUmum === "Lunas"
                         ? "bg-emerald-100 text-emerald-700"
                         : "bg-amber-100 text-amber-700"
                     }`}
-                  >
-                    Kas Maosani: {r.kasMaosani}
-                  </span>
+                    >
+                      Kas Umum: {r.kasUmum}
+                    </span>
                 </div>
               </div>
             ))}

@@ -9,7 +9,7 @@ export const STATUS: { code: StatusKehadiran; label: string }[] = [
 
 export const TIPE_KELAS: TipeKelas[] = ["Reguler", "Kitab"];
 
-export const KATEGORI_KAS: KategoriKas[] = ["Kas Reguler", "Kas Maosani"];
+export const KATEGORI_KAS: KategoriKas[] = ["Kas Reguler", "Kas Umum"];
 
 // Hari dalam seminggu (0 = Minggu .. 6 = Sabtu)
 export const HARI_REGULER = [2, 3, 5, 0]; // Selasa, Rabu, Jumat, Ahad

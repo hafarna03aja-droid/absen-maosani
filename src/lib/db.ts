@@ -4,7 +4,7 @@ export type Santri = { id: string; nama: string };
 
 export type TipeKelas = "Reguler" | "Kitab";
 export type StatusKehadiran = "H" | "S" | "I" | "A";
-export type KategoriKas = "Kas Reguler" | "Kas Maosani";
+export type KategoriKas = "Kas Reguler" | "Kas Umum";
 
 export type Kehadiran = {
   id: string;
@@ -59,7 +59,7 @@ export type RekapSantri = {
   totalSesi: number;
   persen: number;
   kasReguler: "Lunas" | "Belum";
-  kasMaosani: "Lunas" | "Belum";
+  kasUmum: "Lunas" | "Belum";
 };
 
 export async function getRekap(bulan: string): Promise<RekapSantri[]> {
@@ -102,10 +102,10 @@ export async function getRekap(bulan: string): Promise<RekapSantri[]> {
     const kasReguler = (kas || []).some((k) => k.santri_id === s.id && k.kategori === "Kas Reguler" && k.lunas)
       ? "Lunas"
       : "Belum";
-    const kasMaosani = (kas || []).some((k) => k.santri_id === s.id && k.kategori === "Kas Maosani" && k.lunas)
+    const kasUmum = (kas || []).some((k) => k.santri_id === s.id && k.kategori === "Kas Umum" && k.lunas)
       ? "Lunas"
       : "Belum";
-    return { id: s.id, nama: s.nama, totalHadir, totalSesi, persen, kasReguler, kasMaosani };
+    return { id: s.id, nama: s.nama, totalHadir, totalSesi, persen, kasReguler, kasUmum };
   });
 }
 
