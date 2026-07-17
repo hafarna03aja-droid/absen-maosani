@@ -88,27 +88,31 @@ export async function submitKas(formData: FormData) {
   const rows: { santriId: string; lunas: boolean; nominal: number | null }[] = [];
   const transaksis: any[] = [];
   
-  for (const [key, val] of formData.entries()) {
-    if (key.startsWith("lunas_")) {
-      const id = key.slice(6);
-      const nominalRaw = formData.get(`nominal_${id}`);
-      const nominal = nominalRaw ? Number(nominalRaw) || null : null;
-      const isLunas = val === "on";
-      rows.push({ santriId: id, lunas: isLunas, nominal });
-      
-      if (nominal && nominal > 0) {
-        transaksis.push({
-          tanggal,
-          jenis: "Masuk",
-          santri_id: id,
-          sumber_tujuan: `Kas ${kategori}`,
-          nominal,
-          keterangan: isLunas ? "Otomatis dari Kas Bulanan" : "Cicilan Kas Bulanan",
-          input_by: inputBy,
-        });
+    for (const [key, val] of formData.entries()) {
+      if (key.startsWith("nominal_")) {
+        const id = key.slice(8);
+        const nominalRaw = val as string;
+        const nominal = nominalRaw ? Number(nominalRaw) || null : null;
+        const isLunas = formData.get(`lunas_${id}`) === "on";
+        
+        // Simpan ke kas jika lunas dicentang ATAU ada nominal yang diisi
+        if (isLunas || (nominal && nominal > 0)) {
+          rows.push({ santriId: id, lunas: isLunas, nominal });
+          
+          if (nominal && nominal > 0) {
+            transaksis.push({
+              tanggal,
+              jenis: "Masuk",
+              santri_id: id,
+              sumber_tujuan: `Kas ${kategori}`,
+              nominal,
+              keterangan: isLunas ? "Otomatis dari Kas Bulanan" : "Cicilan Kas Bulanan",
+              input_by: inputBy,
+            });
+          }
+        }
       }
     }
-  }
   await upsertKas(rows, tanggal, kategori, inputBy);
   if (transaksis.length > 0) {
     await insertBanyakTransaksi(transaksis);
