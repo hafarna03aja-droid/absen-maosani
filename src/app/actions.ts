@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
@@ -50,6 +51,7 @@ export async function createSantri(formData: FormData) {
       redirect(`/admin?tab=santri&error=${encodeURIComponent(e.message || "Failed")}`);
     }
   }
+  revalidatePath("/admin");
   redirect("/admin?tab=santri");
 }
 
@@ -62,6 +64,7 @@ export async function removeSantri(formData: FormData) {
       console.error(e);
     }
   }
+  revalidatePath("/admin");
   redirect("/admin?tab=santri");
 }
 
@@ -78,6 +81,7 @@ export async function submitKehadiran(formData: FormData) {
     }
   }
   await upsertKehadiran(rows, tanggal, tipeKelas, inputBy);
+  revalidatePath("/admin");
   redirect("/admin?tab=absensi&ok=1");
 }
 
@@ -117,6 +121,7 @@ export async function submitKas(formData: FormData) {
   if (transaksis.length > 0) {
     await insertBanyakTransaksi(transaksis);
   }
+  revalidatePath("/admin");
   redirect("/admin?tab=kas&ok=1");
 }
 
@@ -146,6 +151,7 @@ export async function submitBukuKas(formData: FormData) {
       redirect(`/admin?tab=buku&error=${encodeURIComponent(e.message)}`);
     }
   }
+  revalidatePath("/admin");
   redirect("/admin?tab=buku");
 }
 
@@ -158,5 +164,6 @@ export async function removeTransaksi(formData: FormData) {
       console.error(e);
     }
   }
+  revalidatePath("/admin");
   redirect("/admin?tab=buku");
 }
