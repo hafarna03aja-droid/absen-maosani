@@ -44,17 +44,19 @@ export default function KasForm({ santri }: { santri: Santri[] }) {
 
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
         <table className="w-full text-sm">
-          <thead className="bg-slate-50 text-left text-slate-500">
-            <tr>
-              <th className="px-4 py-2">Santri</th>
-              <th className="px-4 py-2">Lunas</th>
-              <th className="px-4 py-2">Nominal (Rp)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {santri.map((s) => (
-              <tr key={s.id} className="border-t border-slate-100">
-                <td className="px-4 py-2">{s.nama}</td>
+            <thead className="bg-slate-50 text-left text-slate-500">
+              <tr>
+                <th className="px-4 py-2 w-12 text-center">No</th>
+                <th className="px-4 py-2">Santri</th>
+                <th className="px-4 py-2">Lunas</th>
+                <th className="px-4 py-2">Nominal (Rp)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {santri.map((s, idx) => (
+                <tr key={s.id} className="border-t border-slate-100">
+                  <td className="px-4 py-2 text-center text-slate-500">{idx + 1}</td>
+                  <td className="px-4 py-2">{s.nama}</td>
                 <td className="px-4 py-2">
                   <input
                     type="checkbox"

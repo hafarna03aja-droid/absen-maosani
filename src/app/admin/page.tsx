@@ -131,6 +131,7 @@ export default async function AdminPage({
                 <table className="w-full text-sm min-w-[600px]">
                   <thead className="bg-slate-50 text-left text-slate-500">
                     <tr>
+                      <th className="px-4 py-2 w-12 text-center">No</th>
                       <th className="px-4 py-2">Nama</th>
                       <th className="px-4 py-2">TTL</th>
                       <th className="px-4 py-2">Wali</th>
@@ -139,8 +140,9 @@ export default async function AdminPage({
                     </tr>
                   </thead>
                   <tbody>
-                    {santri.map((s) => (
+                    {santri.map((s, idx) => (
                       <tr key={s.id} className="border-t border-slate-100">
+                        <td className="px-4 py-2 text-center text-slate-500">{idx + 1}</td>
                         <td className="px-4 py-2">{s.nama}</td>
                         <td className="px-4 py-2">{s.tempat_tanggal_lahir || "-"}</td>
                         <td className="px-4 py-2">{s.nama_wali || "-"}</td>
