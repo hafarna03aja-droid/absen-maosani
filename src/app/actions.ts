@@ -43,9 +43,13 @@ export async function logout() {
 
 export async function createSantri(formData: FormData) {
   const nama = String(formData.get("nama") || "").trim();
+  const tempat_tanggal_lahir = String(formData.get("tempat_tanggal_lahir") || "").trim() || null;
+  const nama_wali = String(formData.get("nama_wali") || "").trim() || null;
+  const alamat_wali = String(formData.get("alamat_wali") || "").trim() || null;
+
   if (nama) {
     try {
-      await addSantri(nama);
+      await addSantri(nama, tempat_tanggal_lahir, nama_wali, alamat_wali);
     } catch (e: any) {
       console.error(e);
       redirect(`/admin?tab=santri&error=${encodeURIComponent(e.message || "Failed")}`);

@@ -85,27 +85,56 @@ export default async function AdminPage({
             <div className="space-y-4">
               <form
                 action={createSantri}
-                className="flex flex-col gap-2 sm:flex-row sm:items-end"
+                className="flex flex-col gap-4 sm:flex-row sm:items-end"
               >
-                <label className="flex-1 text-sm">
-                  <span className="mb-1 block font-medium text-slate-600">Nama Santri Baru</span>
-                  <input
-                    name="nama"
-                    required
-                    placeholder="Nama lengkap"
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
-                  />
-                </label>
-                <button className="rounded-lg bg-emerald-700 px-4 py-2 font-medium text-white hover:bg-emerald-800">
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <label className="text-sm">
+                    <span className="mb-1 block font-medium text-slate-600">Nama Santri</span>
+                    <input
+                      name="nama"
+                      required
+                      placeholder="Nama lengkap"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </label>
+                  <label className="text-sm">
+                    <span className="mb-1 block font-medium text-slate-600">Tempat, Tanggal Lahir</span>
+                    <input
+                      name="tempat_tanggal_lahir"
+                      placeholder="Contoh: Jakarta, 01-01-2010"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </label>
+                  <label className="text-sm">
+                    <span className="mb-1 block font-medium text-slate-600">Nama Wali</span>
+                    <input
+                      name="nama_wali"
+                      placeholder="Nama ayah/ibu"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </label>
+                  <label className="text-sm">
+                    <span className="mb-1 block font-medium text-slate-600">Alamat</span>
+                    <input
+                      name="alamat_wali"
+                      placeholder="Alamat tempat tinggal"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </label>
+                </div>
+                <button className="rounded-lg bg-emerald-700 px-4 py-2 font-medium text-white hover:bg-emerald-800 h-[42px] whitespace-nowrap">
                   Tambah Santri
                 </button>
               </form>
 
-              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <table className="w-full text-sm min-w-[600px]">
                   <thead className="bg-slate-50 text-left text-slate-500">
                     <tr>
                       <th className="px-4 py-2">Nama</th>
+                      <th className="px-4 py-2">TTL</th>
+                      <th className="px-4 py-2">Wali</th>
+                      <th className="px-4 py-2">Alamat</th>
                       <th className="px-4 py-2">Aksi</th>
                     </tr>
                   </thead>
@@ -113,6 +142,9 @@ export default async function AdminPage({
                     {santri.map((s) => (
                       <tr key={s.id} className="border-t border-slate-100">
                         <td className="px-4 py-2">{s.nama}</td>
+                        <td className="px-4 py-2">{s.tempat_tanggal_lahir || "-"}</td>
+                        <td className="px-4 py-2">{s.nama_wali || "-"}</td>
+                        <td className="px-4 py-2">{s.alamat_wali || "-"}</td>
                         <td className="px-4 py-2">
                           <form action={removeSantri}>
                             <input type="hidden" name="id" value={s.id} />

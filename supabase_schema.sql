@@ -2,7 +2,10 @@
 
 CREATE TABLE santri (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  nama TEXT NOT NULL
+  nama TEXT NOT NULL,
+  tempat_tanggal_lahir TEXT,
+  nama_wali TEXT,
+  alamat_wali TEXT
 );
 
 CREATE TABLE kehadiran (

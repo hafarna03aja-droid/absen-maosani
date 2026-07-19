@@ -1,6 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
-export type Santri = { id: string; nama: string };
+export type Santri = { 
+  id: string; 
+  nama: string;
+  tempat_tanggal_lahir: string | null;
+  nama_wali: string | null;
+  alamat_wali: string | null;
+};
 
 export type TipeKelas = "Reguler" | "Kitab";
 export type StatusKehadiran = "H" | "S" | "I" | "A";
@@ -52,8 +58,18 @@ export async function listSantri(): Promise<Santri[]> {
   return data || [];
 }
 
-export async function addSantri(nama: string): Promise<Santri> {
-  const { data, error } = await supabase.from("santri").insert([{ nama: nama.trim() }]).select().single();
+export async function addSantri(
+  nama: string,
+  tempat_tanggal_lahir: string | null = null,
+  nama_wali: string | null = null,
+  alamat_wali: string | null = null
+): Promise<Santri> {
+  const { data, error } = await supabase.from("santri").insert([{ 
+    nama: nama.trim(),
+    tempat_tanggal_lahir,
+    nama_wali,
+    alamat_wali
+  }]).select().single();
   if (error) throw error;
   return data;
 }
