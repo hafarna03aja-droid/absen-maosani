@@ -184,14 +184,14 @@ export default async function AdminPage({
                                     placeholder="Alamat"
                                   />
                                 </div>
-                                <button
-                                  type="submit"
-                                  className="opacity-0 group-hover:opacity-100 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-200 transition-all whitespace-nowrap"
-                                  title="Simpan perubahan"
-                                >
-                                  Simpan
-                                </button>
-                              </div>
+                                  <button
+                                    type="submit"
+                                    className="text-xs bg-emerald-600 text-white px-3 py-1.5 rounded hover:bg-emerald-700 transition-all whitespace-nowrap font-medium"
+                                    title="Simpan perubahan"
+                                  >
+                                    Simpan
+                                  </button>
+                                </div>
                             </form>
                           </td>
                           <td className="px-4 py-3 align-top">
