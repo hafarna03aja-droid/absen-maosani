@@ -90,17 +90,19 @@ export default async function PublicPage({
             <h2 className="text-lg font-bold text-slate-800 mb-3">5 Transaksi Terakhir</h2>
             <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
               <table className="min-w-full text-left text-sm">
-                <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
-                  <tr>
-                    <th className="px-4 py-3 font-semibold">Tgl</th>
-                    <th className="px-4 py-3 font-semibold">Keterangan</th>
-                    <th className="px-4 py-3 font-semibold text-right">Nominal</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {topTransaksi.map((t) => (
-                    <tr key={t.id}>
-                      <td className="px-4 py-3 text-slate-600 whitespace-nowrap">{t.tanggal}</td>
+                  <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
+                    <tr>
+                      <th className="px-4 py-3 w-12 text-center font-semibold">No</th>
+                      <th className="px-4 py-3 font-semibold">Tgl</th>
+                      <th className="px-4 py-3 font-semibold">Keterangan</th>
+                      <th className="px-4 py-3 font-semibold text-right">Nominal</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {topTransaksi.map((t, idx) => (
+                      <tr key={t.id}>
+                        <td className="px-4 py-3 text-center text-slate-500">{idx + 1}</td>
+                        <td className="px-4 py-3 text-slate-600 whitespace-nowrap">{t.tanggal}</td>
                       <td className="px-4 py-3">
                         <div className="font-medium text-slate-800">
                           {t.santri_nama ? `${t.sumber_tujuan} - ${t.santri_nama}` : t.sumber_tujuan}
