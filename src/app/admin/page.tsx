@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireAuth } from "@/lib/auth";
 import { listSantri, getBukuKas } from "@/lib/db";
-import { createSantri, logout, removeSantri } from "@/app/actions";
+import { createSantri, logout, removeSantri, editSantri } from "@/app/actions";
 import AbsensiForm from "./_components/AbsensiForm";
 import KasForm from "./_components/KasForm";
 import BukuKasForm from "./_components/BukuKasForm";
@@ -139,25 +139,72 @@ export default async function AdminPage({
                       <th className="px-4 py-2">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {santri.map((s, idx) => (
-                      <tr key={s.id} className="border-t border-slate-100">
-                        <td className="px-4 py-2 text-center text-slate-500">{idx + 1}</td>
-                        <td className="px-4 py-2">{s.nama}</td>
-                        <td className="px-4 py-2">{s.tempat_tanggal_lahir || "-"}</td>
-                        <td className="px-4 py-2">{s.nama_wali || "-"}</td>
-                        <td className="px-4 py-2">{s.alamat_wali || "-"}</td>
-                        <td className="px-4 py-2">
-                          <form action={removeSantri}>
-                            <input type="hidden" name="id" value={s.id} />
-                            <button className="text-xs text-red-600 hover:underline">
-                              Hapus
-                            </button>
-                          </form>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
+                    <tbody>
+                      {santri.map((s, idx) => (
+                        <tr key={s.id} className="border-t border-slate-100 group hover:bg-slate-50 transition-colors">
+                          <td className="px-4 py-3 text-center text-slate-500 align-top">{idx + 1}</td>
+                          <td className="px-4 py-3" colSpan={4}>
+                            <form action={editSantri} className="grid grid-cols-1 md:grid-cols-4 gap-2">
+                              <input type="hidden" name="id" value={s.id} />
+                              <div>
+                                <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1 block md:hidden">Nama</label>
+                                <input
+                                  name="nama"
+                                  defaultValue={s.nama}
+                                  required
+                                  className="w-full bg-transparent border-b border-transparent group-hover:border-slate-300 focus:border-emerald-500 focus:bg-white px-1 py-1 text-sm transition-all"
+                                  placeholder="Nama"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1 block md:hidden">TTL</label>
+                                <input
+                                  name="tempat_tanggal_lahir"
+                                  defaultValue={s.tempat_tanggal_lahir || ""}
+                                  className="w-full bg-transparent border-b border-transparent group-hover:border-slate-300 focus:border-emerald-500 focus:bg-white px-1 py-1 text-sm transition-all"
+                                  placeholder="Tempat, Tgl Lahir"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1 block md:hidden">Wali</label>
+                                <input
+                                  name="nama_wali"
+                                  defaultValue={s.nama_wali || ""}
+                                  className="w-full bg-transparent border-b border-transparent group-hover:border-slate-300 focus:border-emerald-500 focus:bg-white px-1 py-1 text-sm transition-all"
+                                  placeholder="Nama Wali"
+                                />
+                              </div>
+                              <div className="flex gap-2 items-start">
+                                <div className="flex-1">
+                                  <label className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1 block md:hidden">Alamat</label>
+                                  <input
+                                    name="alamat_wali"
+                                    defaultValue={s.alamat_wali || ""}
+                                    className="w-full bg-transparent border-b border-transparent group-hover:border-slate-300 focus:border-emerald-500 focus:bg-white px-1 py-1 text-sm transition-all"
+                                    placeholder="Alamat"
+                                  />
+                                </div>
+                                <button
+                                  type="submit"
+                                  className="opacity-0 group-hover:opacity-100 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded hover:bg-emerald-200 transition-all whitespace-nowrap"
+                                  title="Simpan perubahan"
+                                >
+                                  Simpan
+                                </button>
+                              </div>
+                            </form>
+                          </td>
+                          <td className="px-4 py-3 align-top">
+                            <form action={removeSantri}>
+                              <input type="hidden" name="id" value={s.id} />
+                              <button className="text-xs text-red-600 hover:underline mt-1">
+                                Hapus
+                              </button>
+                            </form>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
                 </table>
               </div>
               <p className="text-xs text-slate-400">

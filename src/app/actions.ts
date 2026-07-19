@@ -59,6 +59,27 @@ export async function createSantri(formData: FormData) {
   redirect("/admin?tab=santri");
 }
 
+export async function editSantri(formData: FormData) {
+  const id = String(formData.get("id"));
+  const nama = String(formData.get("nama") || "").trim();
+  const tempat_tanggal_lahir = String(formData.get("tempat_tanggal_lahir") || "").trim() || null;
+  const nama_wali = String(formData.get("nama_wali") || "").trim() || null;
+  const alamat_wali = String(formData.get("alamat_wali") || "").trim() || null;
+
+  if (id && nama) {
+    try {
+      const { updateSantri } = await import("@/lib/db");
+      await updateSantri(id, nama, tempat_tanggal_lahir, nama_wali, alamat_wali);
+    } catch (e) {
+      console.error(e);
+      redirect("/admin?tab=santri&error=Gagal+mengedit+santri");
+    }
+  }
+  revalidatePath("/admin");
+  revalidatePath("/");
+  redirect("/admin?tab=santri&ok=1");
+}
+
 export async function removeSantri(formData: FormData) {
   const id = String(formData.get("id") || "");
   if (id) {

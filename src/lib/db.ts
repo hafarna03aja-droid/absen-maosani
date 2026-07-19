@@ -74,6 +74,11 @@ export async function addSantri(
   return data;
 }
 
+export async function updateSantri(id: string, nama: string, tempat_tanggal_lahir: string | null, nama_wali: string | null, alamat_wali: string | null): Promise<void> {
+  const { error } = await supabase.from("santri").update({ nama, tempat_tanggal_lahir, nama_wali, alamat_wali }).eq("id", id);
+  if (error) throw error;
+}
+
 export async function deleteSantri(id: string): Promise<void> {
   const { error } = await supabase.from("santri").delete().eq("id", id);
   if (error) throw error;
