@@ -6,9 +6,7 @@ import type { Santri, Transaksi } from "@/lib/db";
 
 function todayLocal() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-    d.getDate()
-  ).padStart(2, "0")}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function formatRupiah(n: number) {
@@ -29,34 +27,32 @@ export default function BukuKasForm({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-emerald-50 px-4 py-3 text-emerald-800 border border-emerald-100 flex-1">
-          <p className="text-sm">Saldo Saat Ini</p>
-          <p className="text-2xl font-bold">{formatRupiah(saldo)}</p>
-        </div>
+      <div className="glass rounded-2xl px-5 py-4 shadow-lg">
+        <p className="text-sm text-white/60">Saldo Saat Ini</p>
+        <p className="text-3xl font-bold text-white drop-shadow mt-1">{formatRupiah(saldo)}</p>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm">
-        <h2 className="mb-4 font-semibold text-slate-800">Input Transaksi Baru</h2>
+      <div className="glass rounded-2xl p-5 shadow-lg">
+        <h2 className="mb-4 font-semibold text-white">Input Transaksi Baru</h2>
         <form className="space-y-4" action={submitBukuKas}>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-600">Tanggal</span>
+              <span className="mb-1 block font-medium text-white">Tanggal</span>
               <input
                 type="date"
                 name="tanggal"
                 required
                 defaultValue={todayLocal()}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/30 bg-white text-slate-800 px-3 py-2 focus:border-blue-400 focus:outline-none"
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium text-slate-600">Jenis Transaksi</span>
+              <span className="mb-1 block font-medium text-white">Jenis Transaksi</span>
               <select
                 name="jenis"
                 value={jenis}
                 onChange={(e) => setJenis(e.target.value as "Masuk" | "Keluar")}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-xl border border-white/30 bg-white text-slate-800 px-3 py-2 focus:border-blue-400 focus:outline-none"
               >
                 <option value="Masuk">Pemasukan (Masuk)</option>
                 <option value="Keluar">Pengeluaran (Keluar)</option>
@@ -67,68 +63,66 @@ export default function BukuKasForm({
           <div className="grid gap-4 sm:grid-cols-2">
             {jenis === "Masuk" ? (
               <div className="space-y-3">
-                <p className="text-sm font-medium text-slate-600">Sumber Pemasukan</p>
+                <p className="text-sm font-medium text-white">Sumber Pemasukan</p>
                 <div className="flex gap-4">
-                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer text-white font-medium">
                     <input
                       type="radio"
                       name="tipeAsal"
                       value="santri"
                       checked={tipeAsal === "santri"}
                       onChange={() => setTipeAsal("santri")}
-                      className="text-emerald-600 focus:ring-emerald-500"
+                      className="accent-blue-500"
                     />
                     Dari Santri
                   </label>
-                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer text-white font-medium">
                     <input
                       type="radio"
                       name="tipeAsal"
                       value="umum"
                       checked={tipeAsal === "umum"}
                       onChange={() => setTipeAsal("umum")}
-                      className="text-emerald-600 focus:ring-emerald-500"
+                      className="accent-blue-500"
                     />
                     Umum / Donatur
                   </label>
                 </div>
                 {tipeAsal === "santri" ? (
                   <label className="block text-sm mt-2">
-                    <span className="mb-1 block font-medium text-slate-600">Nama Santri</span>
+                    <span className="mb-1 block font-medium text-white">Nama Santri</span>
                     <select
                       name="santri_id"
                       required
-                      className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                      className="w-full rounded-xl border border-white/30 bg-white text-slate-800 px-3 py-2 focus:border-blue-400 focus:outline-none"
                     >
                       <option value="">-- Pilih Santri --</option>
                       {santri.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.nama}
-                        </option>
+                        <option key={s.id} value={s.id}>{s.nama}</option>
                       ))}
                     </select>
                     <input type="hidden" name="sumber_tujuan" value="Infak Santri" />
                   </label>
                 ) : (
                   <label className="block text-sm mt-2">
-                    <span className="mb-1 block font-medium text-slate-600">Nama Sumber</span>
+                    <span className="mb-1 block font-medium text-white">Nama Sumber</span>
                     <input
                       name="sumber_tujuan"
                       required
                       placeholder="Contoh: Donatur A, Hamba Allah"
-                      className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                      className="w-full rounded-xl border border-white/30 bg-white text-slate-800 placeholder-slate-400 px-3 py-2 focus:border-blue-400 focus:outline-none"
                     />
                   </label>
                 )}
               </div>
             ) : (
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-600">Tujuan Pengeluaran</span>
+                <span className="mb-1 block font-medium text-white">Tujuan Pengeluaran</span>
                 <input
                   name="sumber_tujuan"
                   required
                   placeholder="Contoh: Beli Spidol, Konsumsi"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/30 bg-white text-slate-800 placeholder-slate-400 px-3 py-2 focus:border-blue-400 focus:outline-none"
                 />
                 <input type="hidden" name="tipeAsal" value="umum" />
               </label>
@@ -136,22 +130,22 @@ export default function BukuKasForm({
 
             <div className="space-y-4">
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-600">Nominal (Rp)</span>
+                <span className="mb-1 block font-medium text-white">Nominal (Rp)</span>
                 <input
                   type="number"
                   name="nominal"
                   required
                   min="1"
                   placeholder="Contoh: 50000"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/30 bg-white text-slate-800 placeholder-slate-400 px-3 py-2 focus:border-blue-400 focus:outline-none"
                 />
               </label>
               <label className="block text-sm">
-                <span className="mb-1 block font-medium text-slate-600">Keterangan (Opsional)</span>
+                <span className="mb-1 block font-medium text-white">Keterangan (Opsional)</span>
                 <input
                   name="keterangan"
                   placeholder="Detail tambahan..."
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:outline-none"
+                  className="w-full rounded-xl border border-white/30 bg-white text-slate-800 placeholder-slate-400 px-3 py-2 focus:border-blue-400 focus:outline-none"
                 />
               </label>
             </div>
@@ -159,49 +153,43 @@ export default function BukuKasForm({
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-emerald-600 px-4 py-2 font-medium text-white hover:bg-emerald-700 sm:w-auto"
+            className="rounded-xl bg-gradient-to-r from-blue-600 to-red-600 px-5 py-2.5 font-medium text-white hover:from-blue-700 hover:to-red-700 shadow transition-all"
           >
             Simpan Transaksi
           </button>
         </form>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div className="glass rounded-2xl overflow-x-auto shadow-lg">
         <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-slate-600">
-              <tr>
-                <th className="px-4 py-3 w-12 text-center font-semibold">No</th>
-                <th className="px-4 py-3 font-semibold">Tgl</th>
-                <th className="px-4 py-3 font-semibold">Jenis</th>
-                <th className="px-4 py-3 font-semibold">Sumber / Tujuan</th>
-                <th className="px-4 py-3 font-semibold">Keterangan</th>
-                <th className="px-4 py-3 font-semibold text-right">Nominal</th>
-                <th className="px-4 py-3 font-semibold w-10"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {transaksi.map((t, idx) => (
-                <tr key={t.id} className="hover:bg-slate-50/50">
-                  <td className="px-4 py-3 text-center text-slate-500">{idx + 1}</td>
-                  <td className="px-4 py-3">{t.tanggal}</td>
+          <thead className="border-b border-white/10 text-white/50">
+            <tr>
+              <th className="px-4 py-3 w-12 text-center font-semibold">No</th>
+              <th className="px-4 py-3 font-semibold">Tgl</th>
+              <th className="px-4 py-3 font-semibold">Jenis</th>
+              <th className="px-4 py-3 font-semibold">Sumber / Tujuan</th>
+              <th className="px-4 py-3 font-semibold">Keterangan</th>
+              <th className="px-4 py-3 font-semibold text-right">Nominal</th>
+              <th className="px-4 py-3 font-semibold w-10"></th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/10">
+            {transaksi.map((t, idx) => (
+              <tr key={t.id} className="hover:bg-white/5 transition-colors">
+                <td className="px-4 py-3 text-center text-white/40">{idx + 1}</td>
+                <td className="px-4 py-3 text-white/70">{t.tanggal}</td>
                 <td className="px-4 py-3">
-                  <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                      t.jenis === "Masuk" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
-                    }`}
-                  >
+                  <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    t.jenis === "Masuk" ? "bg-blue-500/30 text-blue-200 border border-blue-400/30" : "bg-red-500/30 text-red-200 border border-red-400/30"
+                  }`}>
                     {t.jenis}
                   </span>
                 </td>
-                <td className="px-4 py-3 font-medium text-slate-800">
+                <td className="px-4 py-3 font-medium text-white">
                   {t.santri_nama ? `${t.sumber_tujuan} - ${t.santri_nama}` : t.sumber_tujuan}
                 </td>
-                <td className="px-4 py-3 text-slate-500">{t.keterangan || "-"}</td>
-                <td
-                  className={`px-4 py-3 text-right font-medium ${
-                    t.jenis === "Masuk" ? "text-emerald-600" : "text-rose-600"
-                  }`}
-                >
+                <td className="px-4 py-3 text-white/50">{t.keterangan || "-"}</td>
+                <td className={`px-4 py-3 text-right font-bold ${t.jenis === "Masuk" ? "text-blue-300" : "text-red-300"}`}>
                   {t.jenis === "Masuk" ? "+" : "-"} {formatRupiah(t.nominal)}
                 </td>
                 <td className="px-4 py-3 text-right">
@@ -209,14 +197,14 @@ export default function BukuKasForm({
                     if (!confirm("Hapus transaksi ini?")) e.preventDefault();
                   }}>
                     <input type="hidden" name="id" value={t.id} />
-                    <button type="submit" className="text-red-500 hover:text-red-700 text-xs font-medium">Hapus</button>
+                    <button type="submit" className="text-red-400 hover:text-red-300 text-xs font-medium transition-colors">Hapus</button>
                   </form>
                 </td>
               </tr>
             ))}
             {transaksi.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-white/40">
                   Belum ada transaksi
                 </td>
               </tr>

@@ -50,9 +50,10 @@ export async function createSantri(formData: FormData) {
   if (nama) {
     try {
       await addSantri(nama, tempat_tanggal_lahir, nama_wali, alamat_wali);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      redirect(`/admin?tab=santri&error=${encodeURIComponent(e.message || "Failed")}`);
+      const msg = e instanceof Error ? e.message : "Failed";
+      redirect(`/admin?tab=santri&error=${encodeURIComponent(msg)}`);
     }
   }
   revalidatePath("/admin");
@@ -85,7 +86,7 @@ export async function removeSantri(formData: FormData) {
   if (id) {
     try {
       await deleteSantri(id);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
     }
   }
@@ -115,7 +116,7 @@ export async function submitKas(formData: FormData) {
   const kategori = String(formData.get("kategori") || "") as KategoriKas;
   const inputBy = String(formData.get("inputBy") || "admin");
   const rows: { santriId: string; lunas: boolean; nominal: number | null }[] = [];
-  const transaksis: any[] = [];
+  const transaksis: { tanggal: string; jenis: "Masuk" | "Keluar"; santri_id: string; sumber_tujuan: string; nominal: number; keterangan: string; input_by: string }[] = [];
   
     for (const [key, val] of formData.entries()) {
       if (key.startsWith("nominal_")) {
@@ -171,9 +172,10 @@ export async function submitBukuKas(formData: FormData) {
         keterangan: keterangan || null,
         input_by: inputBy,
       });
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      redirect(`/admin?tab=buku&error=${encodeURIComponent(e.message)}`);
+      const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+      redirect(`/admin?tab=buku&error=${encodeURIComponent(msg)}`);
     }
   }
   revalidatePath("/admin");

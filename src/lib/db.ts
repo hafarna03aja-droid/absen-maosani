@@ -84,8 +84,6 @@ export async function deleteSantri(id: string): Promise<void> {
   if (error) throw error;
 }
 
-const monthKey = (iso: string) => iso.slice(0, 7);
-
 export type RekapSantri = {
   id: string;
   nama: string;
@@ -245,7 +243,9 @@ export async function getBukuKas() {
   let totalMasuk = 0;
   let totalKeluar = 0;
 
-  const trx: Transaksi[] = (data || []).map((row: any) => {
+  type RawRow = { id: string; tanggal: string; jenis: "Masuk" | "Keluar"; santri_id: string | null; santri?: { nama?: string } | null; sumber_tujuan: string; nominal: number; keterangan: string | null; input_by: string; created_at?: string };
+
+  const trx: Transaksi[] = (data || []).map((row: RawRow) => {
     if (row.jenis === "Masuk") totalMasuk += Number(row.nominal);
     if (row.jenis === "Keluar") totalKeluar += Number(row.nominal);
 
@@ -274,4 +274,66 @@ export async function insertTransaksi(data: Omit<Transaksi, "id" | "created_at" 
 export async function deleteTransaksi(id: string) {
   const { error } = await supabase.from("transaksi").delete().eq("id", id);
   if (error) throw error;
+}
+
+export type RekapRentang = RekapSantri & {
+  kehadiran: { tanggal: string; tipeKelas: TipeKelas; status: StatusKehadiran }[];
+};
+
+export async function getRekapRentang(dari: string, sampai: string): Promise<RekapRentang[]> {
+  if (supabaseUrl.includes("placeholder")) return [];
+
+  const { data: santris, error: errS } = await supabase.from("santri").select("*").order("nama");
+  if (errS) { console.error(errS); return []; }
+
+  const [{ data: kehadiran, error: errK }, { data: kas, error: errC }] = await Promise.all([
+    supabase.from("kehadiran").select("*").gte("tanggal", dari).lte("tanggal", sampai).order("tanggal"),
+    supabase.from("kas").select("*").gte("tanggal", dari).lte("tanggal", sampai),
+  ]);
+  if (errK) { console.error(errK); return []; }
+  if (errC) { console.error(errC); return []; }
+
+  return (santris || []).map((s) => {
+    const sesiSantri = (kehadiran || []).filter((k) => k.santri_id === s.id);
+    const totalHadir = sesiSantri.filter((k) => k.status === "H").length;
+    const totalSesi = sesiSantri.length;
+    const persen = totalSesi === 0 ? 0 : Math.round((totalHadir / totalSesi) * 100);
+    const kasReguler = (kas || []).some((k) => k.santri_id === s.id && k.kategori === "Kas Reguler" && k.lunas) ? "Lunas" : "Belum";
+    const kasUmum = (kas || []).some((k) => k.santri_id === s.id && k.kategori === "Kas Umum" && k.lunas) ? "Lunas" : "Belum";
+    return {
+      id: s.id,
+      nama: s.nama,
+      totalHadir,
+      totalSesi,
+      persen,
+      kasReguler,
+      kasUmum,
+      kehadiran: sesiSantri.map((k) => ({ tanggal: k.tanggal, tipeKelas: k.tipe_kelas as TipeKelas, status: k.status as StatusKehadiran })),
+    };
+  });
+}
+
+export type DetailSantri = {
+  santri: Santri | null;
+  kehadiran: { tanggal: string; tipeKelas: TipeKelas; status: StatusKehadiran }[];
+  kas: { kategori: KategoriKas; lunas: boolean; nominal: number | null; tanggal: string }[];
+};
+
+export async function getDetailSantri(santriId: string, bulan: string): Promise<DetailSantri> {
+  if (supabaseUrl.includes("placeholder")) return { santri: null, kehadiran: [], kas: [] };
+
+  const startDate = `${bulan}-01`;
+  const endDate = `${bulan}-31`;
+
+  const [{ data: santri }, { data: kehadiran }, { data: kas }] = await Promise.all([
+    supabase.from("santri").select("*").eq("id", santriId).single(),
+    supabase.from("kehadiran").select("*").eq("santri_id", santriId).gte("tanggal", startDate).lte("tanggal", endDate).order("tanggal"),
+    supabase.from("kas").select("*").eq("santri_id", santriId).gte("tanggal", startDate).lte("tanggal", endDate).order("tanggal"),
+  ]);
+
+  return {
+    santri: santri ?? null,
+    kehadiran: (kehadiran || []).map((k) => ({ tanggal: k.tanggal, tipeKelas: k.tipe_kelas, status: k.status })),
+    kas: (kas || []).map((k) => ({ kategori: k.kategori, lunas: k.lunas, nominal: k.nominal, tanggal: k.tanggal })),
+  };
 }
