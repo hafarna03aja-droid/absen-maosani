@@ -8,6 +8,7 @@ import {
   deleteSantri,
   upsertKas,
   upsertKehadiran,
+  getLog,
   insertTransaksi,
   insertBanyakTransaksi,
   deleteTransaksi,
@@ -109,6 +110,10 @@ export async function submitKehadiran(formData: FormData) {
   await upsertKehadiran(rows, tanggal, tipeKelas, inputBy);
   revalidatePath("/admin");
   redirect("/admin?tab=absensi&ok=1");
+}
+
+export async function getKehadiranLog(tanggal: string, tipeKelas: TipeKelas) {
+  return await getLog(tanggal, tipeKelas);
 }
 
 export async function submitKas(formData: FormData) {
